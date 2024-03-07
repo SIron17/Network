@@ -184,7 +184,6 @@ def incTrial():
     for sta in stationList:
         sta.delay += 1  # 전송 시도 수 1 증가
 
-
 def changeStaVariables():
     for sta in stationList:
         if (sta.tx_status == True):  # 전송 시도
@@ -221,7 +220,7 @@ def print_Performance():
     # 0으로 나누는 경우에 대한 예외 처리 추가
     PKS_coll_rate = (Stats_PKT_Collision / Stats_PKT_TX_Trial) * 100 if Stats_PKT_TX_Trial != 0 else 0
     PKS_throughput = (Stats_PKT_Success * PACKET_SIZE * 8) / (NUM_SIM * NUM_DTI * TWT_INTERVAL) if Stats_PKT_Success != 0 else 0
-    PKS_delay = (Stats_PKT_Delay / Stats_PKT_Success) * TWT_INTERVAL if Stats_PKT_Success != 0 else 0
+    PKS_delay = (Stats_PKT_Delay / Stats_PKT_Success) * TWT_INTERVAL if Stats_PKT_Success > 0 else 0
 
     print("[패킷 단위 성능]")
     print("전송 시도 수: ", Stats_PKT_TX_Trial)
@@ -364,11 +363,12 @@ def main():
             for j in range(0, NUM_DTI):
                 for sta in stationList:
                     sta.set_buffer()  # 버퍼 설정
+                    incTrial()
                     sta.allocate_RA_RU()  # 백오프 및 전송 시도
                 checkCollision()
                 addStats()
                 changeStaVariables()
         print_Performance()
-    # print_graph()
+    print_graph()
     save()
 main()
