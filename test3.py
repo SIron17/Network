@@ -77,7 +77,8 @@ class Station:
         self.is_buffer_filled = False
 
     def set_buffer(self):
-        self.is_buffer_filled = random.random() < self.probability
+        if not self.is_buffer_filled:
+            self.is_buffer_filled = random.random() < self.probability
 
     def allocate_RA_RU(self):
         if self.is_buffer_filled:
@@ -91,7 +92,6 @@ class Station:
     def transmit_success(self):
         self.is_buffer_filled = False
 
-# 확률을 반환하는 함수 (예: 트래픽에 따라 백오프 시작 확률을 지정)
 # 확률을 반환하는 함수 (예: 트래픽에 따라 백오프 시작 확률을 지정)
 def get_backoff_probability(traffic_type):
     if traffic_type == 'video':
@@ -216,7 +216,6 @@ def changeStaVariables():
                 sta.bo = random.randrange(0, sta.cw)  # backoffCounter
                 sta.tx_status = False  # True 전송 시도, False 전송 시도 않음
                 sta.suc_status = False  # True 전송 성공, False 전송 실패(충돌)
-
 
 def print_Performance():
     # 0으로 나누는 경우에 대한 예외 처리 추가
